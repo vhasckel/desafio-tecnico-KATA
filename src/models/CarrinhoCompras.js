@@ -44,6 +44,30 @@ class CarrinhoCompras {
     );
     return listaAtualizada;
   }
+
+  alterarQuantidade(nome, novaQuantidade) {
+    const produtoParaAlterarQtd = this.produtos.find(
+      (p) => p.nome.trim().toLowerCase() === nome.trim().toLowerCase()
+    );
+
+    if (produtoParaAlterarQtd) {
+      if (novaQuantidade > 0) {
+        produtoParaAlterarQtd.quantidade = novaQuantidade;
+        console.log(
+          `A quantidade de "${produtoParaAlterarQtd.nome}" foi alterada para ${novaQuantidade}.`
+        );
+      } else {
+        this.produtos = this.produtos.filter(
+          (produto) => produto.nome.toLowerCase() !== nome.toLowerCase()
+        );
+        console.log(
+          `Produto "${nome}" removido do carrinho pois a quantidade foi definida como zero.`
+        );
+      }
+    } else {
+      console.log(`Produto "${nome}" não encontrado no carrinho.`);
+    }
+  }
 }
 
 module.exports = CarrinhoCompras;

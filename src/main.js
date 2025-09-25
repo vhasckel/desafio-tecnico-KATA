@@ -12,4 +12,9 @@ console.log(meuCarrinho.listarProdutos());
 // Calcular o total
 console.log("Total:", meuCarrinho.calcularTotal());
 
+// Remover produto
 // console.log(meuCarrinho.removerProduto('NOTEBOOK'))
+
+// Alterar quantidade
+meuCarrinho.alterarQuantidade("mouse", 0);
+console.log(meuCarrinho.listarProdutos());
