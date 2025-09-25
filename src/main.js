@@ -11,3 +11,5 @@ console.log(meuCarrinho.listarProdutos())
 
 // Calcular o total
 console.log('Total:', meuCarrinho.calcularTotal())
+
+console.log(meuCarrinho.removerProduto('NOTEBOOK'))

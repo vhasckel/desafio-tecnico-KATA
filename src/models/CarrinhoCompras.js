@@ -20,6 +20,11 @@ class CarrinhoCompras {
 
     }
 
+    removerProduto(nome) {
+        const listaAtualizada = this.produtos.filter(produto => produto.nome.toLowerCase() !== nome.toLowerCase())
+        return listaAtualizada
+    }
+
 }
 
 module.exports = CarrinhoCompras
