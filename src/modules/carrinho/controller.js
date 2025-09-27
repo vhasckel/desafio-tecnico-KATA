@@ -67,8 +67,44 @@ const removerProduto = (req, res) => {
   }
 };
 
+const aplicarCupom = (req, res) => {
+  try {
+    const { codigoCupom } = req.body;
+
+    if (!codigoCupom) {
+      return res.status(400).json({
+        mensagem: "Código do cupom é obrigatório.",
+      });
+    }
+
+    const resumo = carrinhoService.aplicarCupom(codigoCupom);
+
+    return res.status(200).json({
+      mensagem: `Cupom "${codigoCupom}" aplicado com sucesso!`,
+      resumo: resumo,
+    });
+  } catch (error) {
+    return res.status(400).json({ mensagem: error.message });
+  }
+};
+
+const resumoDaCompra = (req, res) => {
+  try {
+    const resumo = carrinhoService.resumoDaCompra();
+
+    return res.status(200).json({
+      mensagem: "Resumo da compra gerado com sucesso.",
+      resumo: resumo,
+    });
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message });
+  }
+};
+
 module.exports = {
   listarProdutos,
   adicionarProduto,
   removerProduto,
+  aplicarCupom,
+  resumoDaCompra,
 };
