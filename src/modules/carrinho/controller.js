@@ -1,11 +1,12 @@
 const CarrinhoCompras = require("./services");
 
-const carrinhoService = new CarrinhoCompras();
+const getUserId = (req) => req.headers["x-user-id"] || "default";
 
-const listarProdutos = (req, res) => {
+const listarProdutos = async (req, res) => {
   try {
-    const produtos = carrinhoService.listarProdutos();
-    const total = carrinhoService.calcularTotal();
+    const carrinhoService = new CarrinhoCompras(getUserId(req));
+    const produtos = await carrinhoService.listarProdutos();
+    const total = await carrinhoService.calcularTotal();
 
     return res.status(200).json({
       mensagem: "Carrinho recuperado com sucesso.",
@@ -20,7 +21,7 @@ const listarProdutos = (req, res) => {
   }
 };
 
-const adicionarProduto = (req, res) => {
+const adicionarProduto = async (req, res) => {
   try {
     const { produto, quantidade } = req.body;
 
@@ -31,7 +32,8 @@ const adicionarProduto = (req, res) => {
       });
     }
 
-    const carrinhoAtualizado = carrinhoService.adicionarProduto(
+    const carrinhoService = new CarrinhoCompras(getUserId(req));
+    const carrinhoAtualizado = await carrinhoService.adicionarProduto(
       produto,
       quantidade
     );
@@ -45,7 +47,7 @@ const adicionarProduto = (req, res) => {
   }
 };
 
-const removerProduto = (req, res) => {
+const removerProduto = async (req, res) => {
   try {
     const { id } = req.params;
     const produtoId = parseInt(id, 10);
@@ -56,7 +58,8 @@ const removerProduto = (req, res) => {
         .json({ mensagem: "O ID do produto deve ser um número." });
     }
 
-    const carrinhoAtualizado = carrinhoService.removerProduto(produtoId);
+    const carrinhoService = new CarrinhoCompras(getUserId(req));
+    const carrinhoAtualizado = await carrinhoService.removerProduto(produtoId);
 
     return res.status(200).json({
       mensagem: `Produto com ID ${produtoId} removido com sucesso.`,
@@ -67,7 +70,7 @@ const removerProduto = (req, res) => {
   }
 };
 
-const aplicarCupom = (req, res) => {
+const aplicarCupom = async (req, res) => {
   try {
     const { codigoCupom } = req.body;
 
@@ -77,7 +80,8 @@ const aplicarCupom = (req, res) => {
       });
     }
 
-    const resumo = carrinhoService.aplicarCupom(codigoCupom);
+    const carrinhoService = new CarrinhoCompras(getUserId(req));
+    const resumo = await carrinhoService.aplicarCupom(codigoCupom);
 
     return res.status(200).json({
       mensagem: `Cupom "${codigoCupom}" aplicado com sucesso!`,
@@ -88,9 +92,10 @@ const aplicarCupom = (req, res) => {
   }
 };
 
-const resumoDaCompra = (req, res) => {
+const resumoDaCompra = async (req, res) => {
   try {
-    const resumo = carrinhoService.resumoDaCompra();
+    const carrinhoService = new CarrinhoCompras(getUserId(req));
+    const resumo = await carrinhoService.resumoDaCompra();
 
     return res.status(200).json({
       mensagem: "Resumo da compra gerado com sucesso.",
