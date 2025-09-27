@@ -4,26 +4,24 @@ class CarrinhoCompras {
   }
 
   adicionarProduto(produto, quantidade = 1) {
+    if (!produto || typeof produto.id === "undefined") {
+      throw new Error("Produto inválido. É necessário um 'id'.");
+    }
+
     if (quantidade <= 0) {
-      console.log("A quantidade do produto precisa ser maior que zero.");
-      return;
+      throw new Error("A quantidade do produto precisa ser maior que zero.");
     }
 
     const produtoExistente = this.produtos.find(
-      (p) => p.nome.trim().toLowerCase() === produto.nome.trim().toLowerCase()
+      (itemNoCarrinho) => itemNoCarrinho.id === produto.id
     );
 
     if (produtoExistente) {
       produtoExistente.quantidade += quantidade;
-      console.log(
-        `Adicionado mais ${quantidade} unidade(s) de "${produto.nome}". Quantidade total: ${produtoExistente.quantidade}.`
-      );
     } else {
       this.produtos.push({ ...produto, quantidade: quantidade });
-      console.log(
-        `${quantidade} unidade(s) de "${produto.nome}" adicionada(s) ao carrinho.`
-      );
     }
+    return this.produtos;
   }
 
   listarProdutos() {
@@ -32,41 +30,42 @@ class CarrinhoCompras {
 
   calcularTotal() {
     const total = this.produtos.reduce((soma, produto) => {
-      return soma + parseFloat(produto.preco);
+      return soma + produto.preco * produto.quantidade;
     }, 0);
 
     return total;
   }
 
-  removerProduto(nome) {
-    const listaAtualizada = this.produtos.filter(
-      (produto) => produto.nome.toLowerCase() !== nome.toLowerCase()
-    );
-    return listaAtualizada;
+  removerProduto(produtoId) {
+    const tamanhoOriginalCarrinho = this.produtos.length;
+
+    this.produtos = this.produtos.filter((produto) => produto.id !== produtoId);
+
+    if (this.produtos.length === tamanhoOriginalCarrinho) {
+      throw new Error(
+        `Produto com ID ${produtoId} não foi encontrado no carrinho.`
+      );
+    }
+    return this.produtos;
   }
 
-  alterarQuantidade(nome, novaQuantidade) {
-    const produtoParaAlterarQtd = this.produtos.find(
-      (p) => p.nome.trim().toLowerCase() === nome.trim().toLowerCase()
+  alterarQuantidade(produtoId, novaQuantidade) {
+    const alterarQuantidade = this.produtos.find(
+      (produto) => produto.id === produtoId
     );
 
-    if (produtoParaAlterarQtd) {
-      if (novaQuantidade > 0) {
-        produtoParaAlterarQtd.quantidade = novaQuantidade;
-        console.log(
-          `A quantidade de "${produtoParaAlterarQtd.nome}" foi alterada para ${novaQuantidade}.`
-        );
-      } else {
-        this.produtos = this.produtos.filter(
-          (produto) => produto.nome.toLowerCase() !== nome.toLowerCase()
-        );
-        console.log(
-          `Produto "${nome}" removido do carrinho pois a quantidade foi definida como zero.`
-        );
-      }
-    } else {
-      console.log(`Produto "${nome}" não encontrado no carrinho.`);
+    if (novaQuantidade <= 0) {
+      return this.removerProduto(produtoId);
     }
+
+    if (alterarQuantidade) {
+      alterarQuantidade.quantidade = novaQuantidade;
+    } else {
+      throw new Error(
+        `Produto com ID ${produtoId} não foi encontrado no carrinho.`
+      );
+    }
+    return this.produtos;
   }
 }
 
