@@ -10,7 +10,7 @@ class GerenciadorDeProdutos {
     if (
       !dadosProdutos.nome ||
       !dadosProdutos.preco ||
-      typeof dadosProdutos.estoque === "undefined" // Verificação correta
+      typeof dadosProdutos.estoque === "undefined"
     ) {
       throw new Error(
         "Dados do produto incompletos. Nome, preço e estoque são obrigatórios."
