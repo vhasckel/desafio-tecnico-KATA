@@ -19,7 +19,7 @@ npm install
 psql -h 127.0.0.1 -p 5432 -U postgres -f database.sql
 ```
 
-3. Configure as variáveis de ambiente
+3. Configure as variáveis de ambiente.
    Crie um arquivo `.env` na raiz com:
 
 ```bash
@@ -48,12 +48,6 @@ npm run dev
 
 # rodar testes (jest)
 npm test
-
-# build (se aplicável)
-npm run build
-
-# iniciar buildado (se aplicável)
-npm start
 ```
 
 ### API Endpoints
@@ -90,7 +84,7 @@ Carrinho (`/api/carrinho`)
 - `src/routes.js` — roteador raiz
 - `src/config/database.js` — conexão com Postgres (Pool)
 - `src/modules/produto/` — rotas, controller e service de produtos (persistência no DB)
-- `src/modules/carrinho/` — rotas, controller e service do carrinho (carts, cart_items, coupons)
+- `src/modules/carrinho/` — rotas, controller e service do carrinho (carts, cart_items, cupons)
 - `src/middlewares/` — middlewares (CORS, erros, 404)
 
 Regras principais:
