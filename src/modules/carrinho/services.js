@@ -68,16 +68,15 @@ class CarrinhoCompras {
   }
 
   async adicionarProduto(produto, quantidade = 1) {
-    if (!produto || typeof produto.id === "undefined") {
-      throw new Error("Produto inválido. É necessário um 'id'.");
-    }
-
-    const qtd = Number(quantidade);
-    if (isNaN(qtd) || qtd <= 0) {
-      throw new Error("A quantidade do produto precisa ser maior que zero.");
-    }
-
     try {
+      if (!produto || typeof produto.id === "undefined") {
+        throw new Error("Produto inválido. É necessário um 'id'.");
+      }
+
+      const qtd = Number(quantidade);
+      if (isNaN(qtd) || qtd <= 0) {
+        throw new Error("A quantidade do produto precisa ser maior que zero.");
+      }
       const idDoCarrinho = await this._obterOuCriarCarrinho();
 
       const { rows: prods } = await pool.query(
@@ -177,14 +176,13 @@ class CarrinhoCompras {
   }
 
   async removerProduto(idDoProduto) {
-    const id = Number(idDoProduto);
-    if (isNaN(id) || id <= 0) {
-      throw new Error(
-        "ID do produto deve ser um número válido maior que zero."
-      );
-    }
-
     try {
+      const id = Number(idDoProduto);
+      if (isNaN(id) || id <= 0) {
+        throw new Error(
+          "ID do produto deve ser um número válido maior que zero."
+        );
+      }
       const idDoCarrinho = await this._obterOuCriarCarrinho();
       const { rowCount } = await pool.query(
         `DELETE FROM cart_items WHERE cart_id = $1 AND product_id = $2`,
@@ -203,20 +201,19 @@ class CarrinhoCompras {
   }
 
   async alterarQuantidade(idDoProduto, novaQuantidade) {
-    const id = Number(idDoProduto);
-    const qtd = Number(novaQuantidade);
-
-    if (isNaN(id) || id <= 0) {
-      throw new Error(
-        "ID do produto deve ser um número válido maior que zero."
-      );
-    }
-
-    if (qtd <= 0) {
-      return await this.removerProduto(id);
-    }
-
     try {
+      const id = Number(idDoProduto);
+      const qtd = Number(novaQuantidade);
+
+      if (isNaN(id) || id <= 0) {
+        throw new Error(
+          "ID do produto deve ser um número válido maior que zero."
+        );
+      }
+
+      if (qtd <= 0) {
+        return await this.removerProduto(id);
+      }
       const idDoCarrinho = await this._obterOuCriarCarrinho();
       const { rows } = await pool.query(
         `SELECT id, unit_price_cents FROM cart_items WHERE cart_id = $1 AND product_id = $2`,
@@ -243,11 +240,10 @@ class CarrinhoCompras {
   }
 
   async aplicarCupom(codigoCupom) {
-    if (!codigoCupom || typeof codigoCupom !== "string") {
-      throw new Error("Código do cupom é obrigatório.");
-    }
-
     try {
+      if (!codigoCupom || typeof codigoCupom !== "string") {
+        throw new Error("Código do cupom é obrigatório.");
+      }
       const idDoCarrinho = await this._obterOuCriarCarrinho();
 
       const { rows } = await pool.query(
