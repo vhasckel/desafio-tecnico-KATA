@@ -77,6 +77,7 @@ Carrinho (`/api/carrinho`)
 - Dotenv
 - Jest (testes)
 - Nodemon (dev)
+- Render (deploy)
 
 ### Arquitetura
 
@@ -178,3 +179,7 @@ Notas de teste:
 - **Arquitetura**: Clean Architecture com separação Repository/Service/Controller
 - **Princípios SOLID**: Aplicados na separação de responsabilidades
 - **Injeção de Dependência**: Services recebem dependências via construtor
+
+### Deploy
+
+https://desafio-tecnico-kata.onrender.com
