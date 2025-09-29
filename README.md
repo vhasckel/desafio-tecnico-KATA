@@ -171,7 +171,6 @@ npm test
 Notas de teste:
 
 - Os testes unitários usam `jest` e mocks de `pool.query`
-- Os testes podem precisar de atualização devido às mudanças na arquitetura (separação repository/service)
 
 ### Padrões de Código
 
