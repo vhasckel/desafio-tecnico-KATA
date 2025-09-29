@@ -61,7 +61,7 @@ Produtos (`/api/produtos`)
 
 Carrinho (`/api/carrinho`)
 
-- Header recomendado: `x-user-id: <identificador-do-usuario>`
+- Header obrigatório: `x-user-id: <identificador-do-usuario>` (padrão: user-123 se não informado)
 - GET `/api/carrinho` — Lista itens no carrinho
 - POST `/api/carrinho` — Adiciona item
   - body: `{ "produto": { "id": number }, "quantidade": number }`
@@ -82,10 +82,25 @@ Carrinho (`/api/carrinho`)
 
 - `src/main.js` — bootstrap do servidor Express
 - `src/routes.js` — roteador raiz
-- `src/config/database.js` — conexão com Postgres (Pool)
-- `src/modules/produto/` — rotas, controller e service de produtos (persistência no DB)
-- `src/modules/carrinho/` — rotas, controller e service do carrinho (carts, cart_items, cupons)
+- `src/shared/database.js` — conexão com Postgres (Pool)
+- `src/modules/produto/` — módulo completo de produtos
+  - `controller.js` — controladores HTTP
+  - `services.js` — lógica de negócio
+  - `repository.js` — acesso a dados e queries SQL
+  - `routes.js` — definição de rotas
+- `src/modules/carrinho/` — módulo completo do carrinho
+  - `controller.js` — controladores HTTP
+  - `services.js` — lógica de negócio
+  - `repository.js` — acesso a dados e queries SQL
+  - `routes.js` — definição de rotas
 - `src/middlewares/` — middlewares (CORS, erros, 404)
+
+#### Camadas da Arquitetura:
+
+- **Repository**: Gerencia queries SQL e mapeamento de dados
+- **Service**: Contém regras de negócio e validações
+- **Controller**: Lida com requisições HTTP e respostas
+- **Routes**: Define endpoints da API
 
 Regras principais:
 
@@ -155,4 +170,12 @@ npm test
 
 Notas de teste:
 
-- Os testes unitários usam `jest` e mocks de `pool.query`.
+- Os testes unitários usam `jest` e mocks de `pool.query`
+- Os testes podem precisar de atualização devido às mudanças na arquitetura (separação repository/service)
+
+### Padrões de Código
+
+- **Nomenclatura**: Funções e variáveis em português (pt-br), campos de banco de dados em inglês
+- **Arquitetura**: Clean Architecture com separação Repository/Service/Controller
+- **Princípios SOLID**: Aplicados na separação de responsabilidades
+- **Injeção de Dependência**: Services recebem dependências via construtor

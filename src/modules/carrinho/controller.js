@@ -1,12 +1,16 @@
-const CarrinhoCompras = require("./services");
+const CarrinhoService = require("./services");
+const ProdutoService = require("../produto/services");
 
-const getUserId = (req) => req.headers["x-user-id"] || "default";
+const obterIdUsuario = (req) => req.userId || 1;
 
-const listarProdutos = async (req, res) => {
+const listarProdutosDoCarrinho = async (req, res) => {
   try {
-    const carrinhoService = new CarrinhoCompras(getUserId(req));
-    const produtos = await carrinhoService.listarProdutos();
-    const total = await carrinhoService.calcularTotal();
+    const servicoCarrinho = new CarrinhoService(
+      new ProdutoService(),
+      obterIdUsuario(req)
+    );
+    const produtos = await servicoCarrinho.listarProdutos();
+    const total = await servicoCarrinho.calcularTotal();
 
     return res.status(200).json({
       mensagem: "Carrinho recuperado com sucesso.",
@@ -21,7 +25,7 @@ const listarProdutos = async (req, res) => {
   }
 };
 
-const adicionarProduto = async (req, res) => {
+const adicionarProdutoAoCarrinho = async (req, res) => {
   try {
     const { produto, quantidade } = req.body;
 
@@ -32,8 +36,11 @@ const adicionarProduto = async (req, res) => {
       });
     }
 
-    const carrinhoService = new CarrinhoCompras(getUserId(req));
-    const carrinhoAtualizado = await carrinhoService.adicionarProduto(
+    const servicoCarrinho = new CarrinhoService(
+      new ProdutoService(),
+      obterIdUsuario(req)
+    );
+    const carrinhoAtualizado = await servicoCarrinho.adicionarProduto(
       produto,
       quantidade
     );
@@ -47,22 +54,25 @@ const adicionarProduto = async (req, res) => {
   }
 };
 
-const removerProduto = async (req, res) => {
+const removerProdutoDoCarrinho = async (req, res) => {
   try {
     const { id } = req.params;
-    const produtoId = parseInt(id, 10);
+    const idProduto = parseInt(id, 10);
 
-    if (isNaN(produtoId)) {
+    if (isNaN(idProduto)) {
       return res
         .status(400)
         .json({ mensagem: "O ID do produto deve ser um número." });
     }
 
-    const carrinhoService = new CarrinhoCompras(getUserId(req));
-    const carrinhoAtualizado = await carrinhoService.removerProduto(produtoId);
+    const servicoCarrinho = new CarrinhoService(
+      new ProdutoService(),
+      obterIdUsuario(req)
+    );
+    const carrinhoAtualizado = await servicoCarrinho.removerProduto(idProduto);
 
     return res.status(200).json({
-      mensagem: `Produto com ID ${produtoId} removido com sucesso.`,
+      mensagem: `Produto com ID ${idProduto} removido com sucesso.`,
       carrinho: carrinhoAtualizado,
     });
   } catch (error) {
@@ -70,7 +80,7 @@ const removerProduto = async (req, res) => {
   }
 };
 
-const aplicarCupom = async (req, res) => {
+const aplicarCupomAoCarrinho = async (req, res) => {
   try {
     const { codigoCupom } = req.body;
 
@@ -80,8 +90,11 @@ const aplicarCupom = async (req, res) => {
       });
     }
 
-    const carrinhoService = new CarrinhoCompras(getUserId(req));
-    const resumo = await carrinhoService.aplicarCupom(codigoCupom);
+    const servicoCarrinho = new CarrinhoService(
+      new ProdutoService(),
+      obterIdUsuario(req)
+    );
+    const resumo = await servicoCarrinho.aplicarCupom(codigoCupom);
 
     return res.status(200).json({
       mensagem: `Cupom "${codigoCupom}" aplicado com sucesso!`,
@@ -92,10 +105,13 @@ const aplicarCupom = async (req, res) => {
   }
 };
 
-const resumoDaCompra = async (req, res) => {
+const resumoDaCompraDoCarrinho = async (req, res) => {
   try {
-    const carrinhoService = new CarrinhoCompras(getUserId(req));
-    const resumo = await carrinhoService.resumoDaCompra();
+    const servicoCarrinho = new CarrinhoService(
+      new ProdutoService(),
+      obterIdUsuario(req)
+    );
+    const resumo = await servicoCarrinho.resumoDaCompra();
 
     return res.status(200).json({
       mensagem: "Resumo da compra gerado com sucesso.",
@@ -107,9 +123,9 @@ const resumoDaCompra = async (req, res) => {
 };
 
 module.exports = {
-  listarProdutos,
-  adicionarProduto,
-  removerProduto,
-  aplicarCupom,
-  resumoDaCompra,
+  listarProdutosDoCarrinho,
+  adicionarProdutoAoCarrinho,
+  removerProdutoDoCarrinho,
+  aplicarCupomAoCarrinho,
+  resumoDaCompraDoCarrinho,
 };

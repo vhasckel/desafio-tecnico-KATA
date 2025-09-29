@@ -2,10 +2,10 @@ const carrinhoController = require("./controller");
 const express = require("express");
 const router = express.Router();
 
-router.get("/", carrinhoController.listarProdutos);
-router.post("/", carrinhoController.adicionarProduto);
-router.delete("/:id", carrinhoController.removerProduto);
-router.post("/cupom", carrinhoController.aplicarCupom);
-router.get("/resumo", carrinhoController.resumoDaCompra);
+router.get("/", carrinhoController.listarProdutosDoCarrinho);
+router.post("/", carrinhoController.adicionarProdutoAoCarrinho);
+router.delete("/:id", carrinhoController.removerProdutoDoCarrinho);
+router.post("/cupom", carrinhoController.aplicarCupomAoCarrinho);
+router.get("/resumo", carrinhoController.resumoDaCompraDoCarrinho);
 
 module.exports = router;
