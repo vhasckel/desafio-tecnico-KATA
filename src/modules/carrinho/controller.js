@@ -1,7 +1,7 @@
 const CarrinhoService = require("./services");
 const ProdutoService = require("../produto/services");
 
-const obterIdUsuario = (req) => req.userId || 1;
+const obterIdUsuario = (req) => req.headers['x-user-id'] || 'user-123';
 
 const listarProdutosDoCarrinho = async (req, res) => {
   try {
@@ -46,7 +46,7 @@ const adicionarProdutoAoCarrinho = async (req, res) => {
     );
 
     return res.status(200).json({
-      mensagem: `Produto "${produto.nome}" adicionado no carrinho.`,
+      mensagem: `Produto adicionado no carrinho.`,
       carrinho: carrinhoAtualizado,
     });
   } catch (error) {
